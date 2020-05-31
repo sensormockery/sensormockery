@@ -1,5 +1,7 @@
 #include "mock.h"
 #include <math.h>
+#include <stdlib.h>
+#include <time.h>
 
 double getNormVal(double x, enum WaveType type)
 {
@@ -26,10 +28,7 @@ double getNormVal(double x, enum WaveType type)
             return 2 - xt;
     }
 
-    if (type == Sine)
-    {
-        return sin(x * M_PI);
-    }
+    return sin(x * 2 * M_PI);
 }
 
 double mock(double x, double periodLen, enum WaveType type, double low, double high)
@@ -42,5 +41,12 @@ double mock(double x, double periodLen, enum WaveType type, double low, double h
 
 double accelerometerMock(double x, enum WaveType type, double noiseCoeff)
 {
-    return mock(x, 1, type, 9.7, 9.9);
+    srand(time(NULL));
+    return mock(x, 1, type, 9.7, 9.9) + ((double)rand() / RAND_MAX) * noiseCoeff;
+}
+
+double gyroscopeMock(double x, enum WaveType type, double noiseCoeff)
+{
+    srand(time(NULL));
+    return mock(x, 1, type, 0, M_PI * 2) + ((double)rand() / RAND_MAX) * noiseCoeff;
 }
